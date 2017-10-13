@@ -7,9 +7,6 @@ module App
     ( startApp
     ) where
 
-import Control.Concurrent
-import Control.Monad.IO.Class
-import Control.Monad.Trans.Except
 import Network.Wai
 import Network.Wai.MakeAssets
 import Network.Wai.Handler.Warp
@@ -31,7 +28,7 @@ app = serve withAssets <$> server
 server :: IO (Server WithAssets)
 server = do
   assets <- serveAssets def
-  return $ apiServer :<|> assets
+  return $ (apiServer :<|> Tagged assets)
 
 apiServer :: Server Api
 apiServer = return users
