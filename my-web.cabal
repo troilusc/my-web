@@ -16,12 +16,17 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     Lib
+                     , App
+                     , Api
   build-depends:       base >= 4.7 && < 5
                      , servant-server
                      , wai
+                     , wai-make-assets
                      , warp
                      , aeson
                      , text-show
+                     , transformers >= 0.5
+                     , servant-elm
   default-language:    Haskell2010
 
 executable my-web-exe
