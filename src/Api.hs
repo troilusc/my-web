@@ -5,6 +5,7 @@
 
 module Api
     ( api
+    , user
     , Api
     , User (..)
     ) where
@@ -28,3 +29,7 @@ instance ElmType User
 
 api :: Proxy Api
 api = Proxy
+
+-- for generating elm
+user :: Proxy User
+user = Proxy
