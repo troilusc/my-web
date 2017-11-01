@@ -12,6 +12,7 @@ import Network.Wai
 import Network.Wai.MakeAssets
 import Network.Wai.Handler.Warp
 import Network.Wai.Handler.WarpTLS
+import Network.Wai.Middleware.ForceSSL (forceSSL)
 import Servant
 
 import Api
@@ -33,7 +34,7 @@ listen port app = run port =<< app
 startApp :: IO ()
 startApp = do
   _ <- forkIO $ listenTLS 443 webApp
-  listen 80 webApp
+  listen 80 (forceSSL <$> webApp)
 
 webApp :: IO Application
 webApp = serve withAssets <$> server
