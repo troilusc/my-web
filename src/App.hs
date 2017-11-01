@@ -21,7 +21,10 @@ withAssets :: Proxy WithAssets
 withAssets = Proxy
 
 startApp :: IO ()
-startApp = runTLS (tlsSettings "server.crt" "server.key") (setPort 8080 defaultSettings) =<< app
+startApp = runTLS tls settings =<< app
+  where
+    tls = tlsSettingsChain "cert.pem" ["fullchain.pem"] "privkey.pem"
+    settings = setPort 8080 defaultSettings
 
 app :: IO Application
 app = serve withAssets <$> server
