@@ -7,6 +7,7 @@ module App
     ( startApp
     ) where
 
+import Control.Concurrent (forkIO)
 import Network.Wai
 import Network.Wai.MakeAssets
 import Network.Wai.Handler.Warp
@@ -20,14 +21,22 @@ type WithAssets = Api :<|> Raw
 withAssets :: Proxy WithAssets
 withAssets = Proxy
 
-startApp :: IO ()
-startApp = runTLS tls settings =<< app
+listenTLS :: Int -> IO Application -> IO ()
+listenTLS port app = runTLS tls settings =<< app
   where
-    tls = tlsSettingsChain "cert.pem" ["fullchain.pem"] "privkey.pem"
-    settings = setPort 8080 defaultSettings
+    tls = tlsSettings "fullchain.pem" "privkey.pem"
+    settings = setPort port defaultSettings
 
-app :: IO Application
-app = serve withAssets <$> server
+listen :: Int -> IO Application -> IO ()
+listen port app = run port =<< app
+
+startApp :: IO ()
+startApp = do
+  _ <- forkIO $ listenTLS 443 webApp
+  listen 80 webApp
+
+webApp :: IO Application
+webApp = serve withAssets <$> server
 
 server :: IO (Server WithAssets)
 server = do
