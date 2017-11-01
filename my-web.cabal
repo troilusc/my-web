@@ -23,6 +23,7 @@ library
                      , wai
                      , wai-make-assets
                      , warp
+                     , warp-tls
                      , aeson
                      , text-show
                      , transformers >= 0.5

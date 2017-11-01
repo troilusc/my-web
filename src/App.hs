@@ -10,6 +10,7 @@ module App
 import Network.Wai
 import Network.Wai.MakeAssets
 import Network.Wai.Handler.Warp
+import Network.Wai.Handler.WarpTLS
 import Servant
 
 import Api
@@ -20,7 +21,7 @@ withAssets :: Proxy WithAssets
 withAssets = Proxy
 
 startApp :: IO ()
-startApp = run 8080 =<< app
+startApp = runTLS (tlsSettings "server.crt" "server.key") (setPort 8080 defaultSettings) =<< app
 
 app :: IO Application
 app = serve withAssets <$> server
